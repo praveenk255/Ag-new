@@ -1,0 +1,96 @@
+<div class="container">
+  <h1>Flight Data Application</h1>
+
+  <button (click)="toggleFlightDataManagement()">
+    Flight Data Management
+  </button>
+
+  <!-- Flight Data Management Section -->
+  <div *ngIf="showFlightDataManagement">
+    <h2>Manage Flight Data</h2>
+    <input type="file" (change)="uploadExcel($event)" />
+    <br />
+
+    <h3>Add Flight</h3>
+    <input
+      placeholder="Flight Number"
+      [(ngModel)]="flightForm.flightNumber"
+    />
+    <input placeholder="STA" [(ngModel)]="flightForm.sta" />
+    <input placeholder="STD" [(ngModel)]="flightForm.std" />
+    <button (click)="addFlight()">Add</button>
+
+    <h3>Flight Table</h3>
+    <table border="1">
+      <tr>
+        <th>Flight Number</th>
+        <th>STA</th>
+        <th>STD</th>
+        <th>Actions</th>
+      </tr>
+      <tr *ngFor="let flight of flights; let i = index">
+        <td>{{ flight.flightNumber }}</td>
+        <td>{{ flight.sta }}</td>
+        <td>{{ flight.std }}</td>
+        <td>
+          <button (click)="deleteFlight(i)">Delete</button>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Main Page -->
+  <div>
+    <h2>Main Form</h2>
+
+    <label>Flight Number:</label>
+    <select [(ngModel)]="selectedFlight" (change)="onFlightSelection()">
+      <option *ngFor="let flight of flights" [value]="flight.flightNumber">
+        {{ flight.flightNumber }}
+      </option>
+    </select>
+
+    <p>STA: {{ sta }}</p>
+    <p>STD: {{ std }}</p>
+
+    <label>ATA:</label>
+    <input type="time" [(ngModel)]="ata" />
+    <label>FPB:</label>
+    <input type="time" [(ngModel)]="fpb" />
+    <label>LPB:</label>
+    <input type="time" [(ngModel)]="lpb" />
+    <label>DC:</label>
+    <input type="time" [(ngModel)]="dc" />
+    <label>ATD:</label>
+    <input type="time" [(ngModel)]="atd" />
+
+    <label>DC Status:</label>
+    <select [(ngModel)]="dcStatus">
+      <option>Achieved</option>
+      <option>Delay due to holds not closed</option>
+      <option>Cabin congestion</option>
+    </select>
+
+    <label>Arrival Wheelchairs:</label>
+    <select [(ngModel)]="arrivalWheelchairs">
+      <option *ngFor="let n of [].constructor(11); let i = index">
+        {{ i === 0 ? 'N/A' : i }}
+      </option>
+    </select>
+
+    <label>Departure Wheelchairs:</label>
+    <select [(ngModel)]="departureWheelchairs">
+      <option *ngFor="let n of [].constructor(11); let i = index">
+        {{ i === 0 ? 'N/A' : i }}
+      </option>
+    </select>
+
+    <button (click)="calculateResults()">Submit</button>
+
+    <!-- Results -->
+    <div *ngIf="results">
+      <h3>Results</h3>
+      <pre>{{ results | json }}</pre>
+    </div>
+  </div>
+</div>
